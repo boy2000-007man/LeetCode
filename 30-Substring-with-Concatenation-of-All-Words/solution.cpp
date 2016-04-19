@@ -1,45 +1,45 @@
-struct dictionary_tree {
-    int num;
-    vector<pair<char, dictionary_tree *>> next;
-    dictionary_tree() : num(0), next(0) {
-    }
-    ~dictionary_tree() {
-        for (auto &p: next)
-            if (p.second)
-                delete p.second;
-    }
-    int &operator[](const char *s) {
-        dictionary_tree *r = this;
-        for (int i = 0; s[i]; i++) {
-            bool find = false;
-            for (int j = 0; j < r->next.size() && !find; j++)
-                if (s[i] == r->next[j].first) {
-                    find = true;
-                    r = r->next[j].second;
-                }
-            if (!find) {
-                r->next.push_back(make_pair(s[i], new dictionary_tree()));
-                r = r->next.back().second;
-            }
-        }
-        return r->num;
-    }
-    int *find(const char *s, int length) {
-        dictionary_tree *r = this;
-        for (int i = 0; i < length; i++) {
-            bool find = false;
-            for (int j = 0; j < r->next.size() && !find; j++)
-                if (s[i] == r->next[j].first) {
-                    find = true;
-                    r = r->next[j].second;
-                }
-            if (!find)
-                return NULL;
-        }
-        return &r->num;
-    }
-};
 class Solution {
+    struct dictionary_tree {
+        int num;
+        vector<pair<char, dictionary_tree *>> next;
+        dictionary_tree() : num(0), next(0) {
+        }
+        ~dictionary_tree() {
+            for (auto &p: next)
+                if (p.second)
+                    delete p.second;
+        }
+        int &operator[](const char *s) {
+            dictionary_tree *r = this;
+            for (int i = 0; s[i]; i++) {
+                bool find = false;
+                for (int j = 0; j < r->next.size() && !find; j++)
+                    if (s[i] == r->next[j].first) {
+                        find = true;
+                        r = r->next[j].second;
+                    }
+                if (!find) {
+                    r->next.push_back(make_pair(s[i], new dictionary_tree()));
+                    r = r->next.back().second;
+                }
+            }
+            return r->num;
+        }
+        int *find(const char *s, int length) {
+            dictionary_tree *r = this;
+            for (int i = 0; i < length; i++) {
+                bool find = false;
+                for (int j = 0; j < r->next.size() && !find; j++)
+                    if (s[i] == r->next[j].first) {
+                        find = true;
+                        r = r->next[j].second;
+                    }
+                if (!find)
+                    return NULL;
+            }
+            return &r->num;
+        }
+    };
 public:
     vector<int> findSubstring(string s, vector<string>& words) {
         vector<int> result(0),
