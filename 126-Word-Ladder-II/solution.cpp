@@ -55,39 +55,41 @@ public:
         for (int idx: queue)
             idx2depth[idx] = 1;
         vector<bool> next_idx2tst(idx2wrd.size(), false);
-        for (int idx; !queue.empty() && idx2depth[idx = queue.front()] < idx2depth.back(); queue.pop_front()) {
-            vector<int> &pre = prefix.find(idx2wrd[idx].c_str(), pre_len),
-                        &suf = suffix.find(idx2wrd[idx].c_str() + pre_len, suf_len);
-            next_idx2tst[idx] = true;
-            for (int next_idx: pre)
-                if (!next_idx2tst[next_idx]) {
-                    if (idx2depth[idx] < idx2depth[next_idx]
-                    && neighbour(idx2wrd[idx].c_str() + pre_len, idx2wrd[next_idx].c_str() + pre_len, suf_len)) {
-                        idx2prev[next_idx].push_back(idx);
-                        if (idx2depth[next_idx] == INT_MAX) {
-                            queue.push_back(next_idx);
-                            idx2depth[next_idx] = idx2depth[idx] + 1;
+        for (int idx; !queue.empty() && idx2depth[idx = queue.front()] < idx2depth.back(); queue.pop_front())
+            if (idx2depth.back() == INT_MAX) {
+                vector<int> &pre = prefix.find(idx2wrd[idx].c_str(), pre_len),
+                            &suf = suffix.find(idx2wrd[idx].c_str() + pre_len, suf_len);
+                next_idx2tst[idx] = true;
+                for (int next_idx: pre)
+                    if (!next_idx2tst[next_idx]) {
+                        if (idx2depth[idx] < idx2depth[next_idx]
+                        && neighbour(idx2wrd[idx].c_str() + pre_len, idx2wrd[next_idx].c_str() + pre_len, suf_len)) {
+                            idx2prev[next_idx].push_back(idx);
+                            if (idx2depth[next_idx] == INT_MAX) {
+                                queue.push_back(next_idx);
+                                idx2depth[next_idx] = idx2depth[idx] + 1;
+                            }
                         }
+                        next_idx2tst[next_idx] = true;
                     }
-                    next_idx2tst[next_idx] = true;
-                }
-            for (int next_idx: suf)
-                if (!next_idx2tst[next_idx]) {
-                    if (idx2depth[idx] < idx2depth[next_idx]
-                    && neighbour(idx2wrd[idx].c_str(), idx2wrd[next_idx].c_str(), pre_len)) {
-                        idx2prev[next_idx].push_back(idx);
-                        if (idx2depth[next_idx] == INT_MAX) {
-                            queue.push_back(next_idx);
-                            idx2depth[next_idx] = idx2depth[idx] + 1;
+                for (int next_idx: suf)
+                    if (!next_idx2tst[next_idx]) {
+                        if (idx2depth[idx] < idx2depth[next_idx]
+                        && neighbour(idx2wrd[idx].c_str(), idx2wrd[next_idx].c_str(), pre_len)) {
+                            idx2prev[next_idx].push_back(idx);
+                            if (idx2depth[next_idx] == INT_MAX) {
+                                queue.push_back(next_idx);
+                                idx2depth[next_idx] = idx2depth[idx] + 1;
+                            }
                         }
+                        next_idx2tst[next_idx] = true;
                     }
-                    next_idx2tst[next_idx] = true;
-                }
-            for (int next_idx: pre)
-                next_idx2tst[next_idx] = false;
-            for (int next_idx: suf)
-                next_idx2tst[next_idx] = false;
-        }
+                for (int next_idx: pre)
+                    next_idx2tst[next_idx] = false;
+                for (int next_idx: suf)
+                    next_idx2tst[next_idx] = false;
+            } else if (neighbour(idx2wrd[idx].c_str(), idx2wrd.back().c_str(), tot_len))
+                idx2prev.back().push_back(idx);
         vector<vector<string>> result(0);
         if (idx2depth.back() == INT_MAX)
             return result;
