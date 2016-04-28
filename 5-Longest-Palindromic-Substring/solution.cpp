@@ -22,7 +22,7 @@ public:
                 } else if ((l -= offset[l - i]) < i)
                     l = i, r--;
             if (llen < l + r - 2 * i + 1)
-                longest = s.substr(i, llen = l + r - 2 * i + 1);
+                s.substr(i, llen = l + r - 2 * i + 1).swap(longest);
         }
         return longest;
     }
