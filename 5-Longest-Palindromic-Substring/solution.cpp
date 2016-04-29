@@ -1,29 +1,48 @@
 class Solution {
 public:
     string longestPalindrome(string s) {
+        vector<int> occur(256, 0);
+        int odd_count = 0;
+        for (char c: s)
+            if (++occur[c] & 1)
+                odd_count++;
+            else
+                odd_count--;
         int slen = s.length(),
-            start = 0,
-            len = 0;
-        for (int i = 0; i < slen - len; i++) {
-            vector<int> equal(slen - i >> 1, 1),
-                        offset(equal.size(), 1);
-            for (int j = 1; j < equal.size(); j++) {
-                offset[j] = equal[j] = equal[j - 1];
-                while (offset[j] <= j && s[i + j] == s[i + j - offset[j]])
-                    offset[j] += offset[j - offset[j]];
-                while (equal[j] <= j && s[i + j] != s[i + j - equal[j]])
-                    equal[j] += offset[j - equal[j]];
+            len = slen - max(0, odd_count - 1);
+        for (int i = len; i < slen; i++)
+            if (--occur[s[i]] & 1)
+                odd_count++;
+            else
+                odd_count--;
+        for ( ; len; len--) {
+            vector<int> occur_cpy(occur);
+            int odd_count_cpy = odd_count;
+            for (int i = 0; i <= slen - len; i++) {
+                if (odd_count < 2 && !((len ^ odd_count) & 1)) {
+                    bool palindromic = true;
+                    for (int j = 0; j < len - j - 1 && palindromic; j++)
+                        if (s[i + j] != s[i + len - j - 1])
+                            palindromic = false;
+                    if (palindromic)
+                        return s.substr(i, len);
+                }
+                if (--occur[s[i]] & 1)
+                    odd_count++;
+                else
+                    odd_count--;
+                if (++occur[s[i + len]] & 1)
+                    odd_count++;
+                else
+                    odd_count--;
             }
-            int l = i,
-                r = slen - 1;
-            while (l < r && len < l + r - 2 * i + 1)
-                if (s[l] == s[r]) {
-                    l++, r--;
-                } else if ((l -= offset[l - i]) < i)
-                    l = i, r--;
-            if (len < l + r - 2 * i + 1)
-                start = i, len = l + r - 2 * i + 1;
+            occur.swap(occur_cpy);
+            odd_count = odd_count_cpy;
+            if (--occur[s[len - 1]] & 1)
+                odd_count++;
+            else
+                odd_count--;
         }
-        return s.substr(start, len);
+        return "";
     }
 };
