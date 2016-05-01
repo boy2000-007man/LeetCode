@@ -1,8 +1,6 @@
 class Solution {
 public:
     string multiply(string num1, string num2) {
-        if (num1 == "0" || num2 == "0")
-            return "0";
         int len1 = num1.length(),
             len2 = num2.length();
         vector<int> res(len1 + len2, 0);
@@ -13,9 +11,12 @@ public:
             res[i - 1] += res[i] / 10;
             res[i] %= 10;
         }
+        int loc = 0;
+        while (!res[loc] && loc < res.size() - 1)
+            loc++;
         stringstream ss;
-        for (int i = !res[0]; i < res.size(); i++)
-            ss << res[i];
+        while (loc < res.size())
+            ss << res[loc++];
         return ss.str();
     }
 };
