@@ -9,12 +9,13 @@
  */
 class Solution {
     int search(TreeNode *root, int k, int &val) {
+        if (k <= 0)
+            return 0;
         int num = 0;
         if (root->left)
             num += search(root->left, k, val);
-        if (num == k - 1)
+        if (++num == k)
             val = root->val;
-        num++;
         if (root->right)
             num += search(root->right, k - num, val);
         return num;
