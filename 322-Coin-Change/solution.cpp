@@ -1,19 +1,15 @@
 class Solution {
-    int change(vector<pair<bool, int>> &number, vector<int> &coins, int amount) {
-        if (!number[amount].first) {
-            for (int coin: coins)
-                if (coin <= amount && change(number, coins, amount - coin) != -1)
-                    number[amount].second = min(number[amount].second, number[amount - coin].second + 1);
-            if (number[amount].second == INT_MAX)
-                number[amount].second = -1;
-            number[amount].first = !number[amount].first;
-        }
-        return number[amount].second;
-    }
 public:
     int coinChange(vector<int>& coins, int amount) {
-        vector<pair<bool, int>> number(amount + 1, make_pair(false, INT_MAX));
-        number[0] = make_pair(true, 0);
-        return change(number, coins, amount);
+        vector<int> number(amount + 1, -1);
+        number[0] = 0;
+        queue<int> q;
+        for (q.push(0); !q.empty(); q.pop())
+            for (int coin: coins)
+                if (q.front() + coin <= amount && number[q.front() + coin] == -1) {
+                    number[q.front() + coin] = number[q.front()] + 1;
+                    q.push(q.front() + coin);
+                }
+        return number[amount];
     }
 };
