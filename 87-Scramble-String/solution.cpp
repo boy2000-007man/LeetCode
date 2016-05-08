@@ -1,37 +1,40 @@
 class Solution {
 public:
-    bool isScramble(string s1, string s2) {
-        bool result = s1 == s2;
+    bool isScramble(const string &s1, const string &s2, int l1 = 0, int l2 = 0, int len = -1) {
+        if (len < 0)
+            len = s1.length();
+        if (!len)
+            return true;
+        else if (len == 1)
+            return s1[l1] == s2[l2];
         vector<int> cnt(256, 0);
-        int num = 0,
-            l = 0,
-            r = s1.length() - 1;
-        for (int m = l; m <= r && !result; m++) {
-            if (!cnt[s1[m]]++)
+        int num = 0;
+        for (int i = 0; i < len; i++) {
+            if (!cnt[s1[l1 + i]]++)
                 num--;
-            else if (!cnt[s1[m]])
+            else if (!cnt[s1[l1 + i]])
                 num++;
-            if (!cnt[s2[m]]--)
+            if (!cnt[s2[l2 + i]]--)
                 num--;
-            else if (!cnt[s2[m]])
+            else if (!cnt[s2[l2 + i]])
                 num++;
-            if (m < r && !num)
-                result = isScramble(s1.substr(l, m - l + 1), s2.substr(l, m - l + 1))
-                        && isScramble(s1.substr(m + 1, r - m), s2.substr(m + 1, r - m));
+            if (!num && i + 1 < len && isScramble(s1, s2, l1, l2, i + 1) && isScramble(s1, s2, l1 + i + 1, l2 + i + 1, len - i - 1))
+                return true;
         }
-        for (int m = l; m < r && !result; m++) {
-            if (!cnt[s1[m]]++)
+        if (num)
+            return false;
+        for (int i = 0; i + 1 < len; i++) {
+            if (!cnt[s1[l1 + i]]++)
                 num--;
-            else if (!cnt[s1[m]])
+            else if (!cnt[s1[l1 + i]])
                 num++;
-            if (!cnt[s2[l + r - m]]--)
+            if (!cnt[s2[l2 + len - i - 1]]--)
                 num--;
-            else if (!cnt[s2[l + r - m]])
+            else if (!cnt[s2[l2 + len - i - 1]])
                 num++;
-            if (!num)
-                result = isScramble(s1.substr(l, m - l + 1), s2.substr(l + r - m, m - l + 1))
-                        && isScramble(s1.substr(m + 1, r - m), s2.substr(l, r - m));
+            if (!num && isScramble(s1, s2, l1, l2 + len - i - 1, i + 1) && isScramble(s1, s2, l1 + i + 1, l2, len - i - 1))
+                return true;
         }
-        return result;
+        return false;
     }
 };
