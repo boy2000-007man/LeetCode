@@ -1,12 +1,11 @@
 class Solution {
-public:
-    bool isScramble(const string &s1, const string &s2, int l1 = 0, int l2 = 0, int len = -1) {
-        if (len < 0)
-            len = s1.length();
+    bool search(vector<vector<vector<int>>> &result, string &s1, string &s2, int l1, int l2, int len) {
+        if (0 <= result[l1][l2][len])
+            return result[l1][l2][len];
         if (!len)
-            return true;
-        else if (len == 1)
-            return s1[l1] == s2[l2];
+            return result[l1][l2][len] = true;
+        if (len == 1)
+            return result[l1][l2][len] = s1[l1] == s2[l2];
         vector<int> cnt(256, 0);
         int num = 0;
         for (int i = 0; i < len; i++) {
@@ -18,11 +17,11 @@ public:
                 num--;
             else if (!cnt[s2[l2 + i]])
                 num++;
-            if (!num && i + 1 < len && isScramble(s1, s2, l1, l2, i + 1) && isScramble(s1, s2, l1 + i + 1, l2 + i + 1, len - i - 1))
-                return true;
+            if (!num && i + 1 < len && search(result, s1, s2, l1, l2, i + 1) && search(result, s1, s2, l1 + i + 1, l2 + i + 1, len - i - 1))
+                return result[l1][l2][len] = true;
         }
         if (num)
-            return false;
+            return result[l1][l2][len] = false;
         for (int i = 0; i + 1 < len; i++) {
             if (!cnt[s1[l1 + i]]++)
                 num--;
@@ -32,9 +31,15 @@ public:
                 num--;
             else if (!cnt[s2[l2 + len - i - 1]])
                 num++;
-            if (!num && isScramble(s1, s2, l1, l2 + len - i - 1, i + 1) && isScramble(s1, s2, l1 + i + 1, l2, len - i - 1))
-                return true;
+        if (!num && search(result, s1, s2, l1, l2 + len - i - 1, i + 1) && search(result, s1, s2, l1 + i + 1, l2, len - i - 1))
+                return result[l1][l2][len] = true;
         }
-        return false;
+        return result[l1][l2][len] = false;
+    }
+public:
+    bool isScramble(string s1, string s2) {
+        int len = s1.length();
+        vector<vector<vector<int>>> result(len + 1, vector<vector<int>>(len + 1, vector<int>(len + 1, -1)));
+        return search(result, s1, s2, 0, 0, len);
     }
 };
