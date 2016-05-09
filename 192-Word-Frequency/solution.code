@@ -1,0 +1,2 @@
+# Read from the file words.txt and output the word frequency list to stdout.
+cat words.txt|tr -cs "[a-z]" "\n"|sort|uniq -c|sort -k1nr|sed -r 's/\s*([0-9]+)\s*([a-z]+)/\2 \1/'
