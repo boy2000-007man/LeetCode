@@ -1,0 +1,2 @@
+# Write your MySQL query statement below
+select Scores.Score, count(a.Score)+1 from Scores left join (select distinct Score from Scores) a on Scores.Score<a.Score group by Scores.Id, Scores.Score order by Scores.Score desc
