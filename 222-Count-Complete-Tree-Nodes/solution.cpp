@@ -19,9 +19,9 @@ public:
         if (l == r)
             return (1 << l) - 1;
         int cnt = countNodes(root->left, l - 1, 0) + 1;
-        if (cnt < 1 << l - 1)
-            return cnt + (1 << r - 1) - 1;
-        else
+        if (cnt >> l - 1)
             return cnt + countNodes(root->right, 0, r - 1);
+        else
+            return cnt + (1 << r - 1) - 1;
     }
 };
