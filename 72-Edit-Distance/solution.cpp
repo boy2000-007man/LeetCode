@@ -7,7 +7,10 @@ public:
             word1.swap(word2);
             swap(len1, len2);
         }
-        vector<vector<int>> result(len1 + 1, vector<int>(len2 + 1, len1));
+        int result[len1 + 1][len2 + 1];
+        for (int i = 0; i <= len1; i++)
+            for (int j = 0; j <= len2; j++)
+                result[i][j] = len1;
         for (int i = 0; i <= len1; i++)
             for (int j = max(0, i + (len2 >> 1) - len1); j <= min(len2, i + (len2 >> 1)); j++)
                 if (!i && !j)
@@ -20,6 +23,6 @@ public:
                     if (i && j)
                         result[i][j] = min(result[i][j], result[i - 1][j - 1] + (word1[i - 1] != word2[j - 1]));
                 }
-        return result.back().back();
+        return result[len1][len2];
     }
 };
