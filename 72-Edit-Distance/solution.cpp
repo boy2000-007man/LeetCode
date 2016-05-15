@@ -8,9 +8,7 @@ public:
             swap(len1, len2);
         }
         int result[len1 + 1][len2 + 1];
-        for (int i = 0; i <= len1; i++)
-            for (int j = 0; j <= len2; j++)
-                result[i][j] = len1;
+        memset(result, 0x7f, sizeof(result));
         for (int i = 0; i <= len1; i++)
             for (int j = max(0, i + (len2 >> 1) - len1); j <= min(len2, i + (len2 >> 1)); j++)
                 if (!i && !j)
