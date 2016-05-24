@@ -1,6 +1,11 @@
 class LRUCache{
-    list<pair<int, int>> lst;
-    unordered_map<int, pair<bool, list<pair<int, int>>::iterator>> um;
+    struct Int {
+        int val;
+        Int(int value = -1) : val(value) {
+        }
+    };
+    list<int> lst;
+    unordered_map<int, pair<Int, list<int>::iterator>> um;
     int limit;
 public:
     LRUCache(int capacity) : limit(capacity) {
@@ -8,25 +13,24 @@ public:
     
     int get(int key) {
         auto &p = um[key];
-        if (!p.first)
-            return -1;
-        else {
-            lst.push_front(*p.second);
+        if (p.first.val != -1) {
+            lst.push_front(key);
             lst.erase(p.second);
-            return (p.second = lst.begin())->second;
+            p.second = lst.begin();
         }
+        return p.first.val;
     }
     
     void set(int key, int value) {
-        if (get(key) != -1)
-            lst.front().second = value;
-        else {
-            lst.push_front({key, value});
-            um[key] = {true, lst.begin()};
-            if (limit < lst.size()) {
-                um[lst.back().first].first = false;
-                lst.pop_back();
-            }
+        auto &p = um[key];
+        lst.push_front(key);
+        if (p.first.val != -1)
+            lst.erase(p.second);
+        else if (limit < lst.size()) {
+            um[lst.back()].first.val = -1;
+            lst.pop_back();
         }
+        p.first.val = value;
+        p.second = lst.begin();
     }
 };
