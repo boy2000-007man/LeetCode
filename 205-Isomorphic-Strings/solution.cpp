@@ -1,7 +1,7 @@
 class Solution {
 public:
     bool isIsomorphic(string s, string t) {
-        unordered_map<char, char> um[2];
+        char um[2][256] = {};
         int i = 0;
         for ( ; s[i] && t[i]; i++) {
             char &s_ = um[0][s[i]],
