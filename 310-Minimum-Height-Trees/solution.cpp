@@ -1,35 +1,28 @@
 class Solution {
 public:
     vector<int> findMinHeightTrees(int n, vector<pair<int, int>>& edges) {
-        list<pair<int, int>> edges_(0);
-        for (auto &edge: edges)
-            edges_.push_back(edge);
-        vector<bool> is_root(n, true);
-        while (2 < n) {
-            vector<int> k(is_root.size(), 0);
-            for (auto &edge: edges_) {
-                k[edge.first]++;
-                k[edge.second]++;
-            }
-            for (auto it = edges_.begin(); it != edges_.end(); )
-                if (k[it->first] != 1 && k[it->second] != 1)
-                    ++it;
-                else {
-                    if (k[it->first] == 1) {
-                        is_root[it->first] = false;
-                        n--;
-                    }
-                    if (k[it->second] == 1) {
-                        is_root[it->second] = false;
-                        n--;
-                    }
-                    it = edges_.erase(it);
-                }
+        vector<int> cnt(n, 0);
+        vector<vector<int>> e(n);
+        for (auto &p: edges) {
+            cnt[p.first]++;
+            cnt[p.second]++;
+            e[p.first].push_back(p.second);
+            e[p.second].push_back(p.first);
         }
-        vector<int> root(0);
-        for (int i = 0; root.size() < n; i++)
-            if (is_root[i])
-                root.push_back(i);
-        return root;
+        vector<int> v;
+        for (int i = 0; i < cnt.size(); i++)
+            if (cnt[i] == 1)
+                v.push_back(i);
+        while (2 < n) {
+            vector<int> next;
+            for (int i: v) {
+                for (int j: e[i])
+                    if (--cnt[j] == 1)
+                        next.push_back(j);
+                n--;
+            }
+            v.swap(next);
+        }
+        return v.empty() ? vector<int>(1, 0) : v;
     }
 };
