@@ -43,14 +43,13 @@ public:
             else
                 vec.push_back({1, p});
         int result = 0;
-        for (auto &s: vec) {
-            result = max(result, s.first);
+        for (int i = 0; i < vec.size(); i++) {
+            result = max(result, vec[i].first);
             unordered_map<string, int> um;
-            for (auto &e: vec)
-                if (&s != &e)
-                    um[k(s.second, e.second)] += e.first;
+            for (int j = i + 1; j < vec.size(); j++)
+                    um[k(vec[i].second, vec[j].second)] += vec[j].first;
             for (auto &p: um)
-                result = max(result, s.first + p.second);
+                result = max(result, vec[i].first + p.second);
         }
         return result;
     }
