@@ -30,9 +30,3 @@ Special thanks to [@jeantimex](https://leetcode.com/discuss/user/jeantimex) for 
 [Subscribe](/subscribe/) to see which companies asked this question
 
 </div>
-
-<div>
-
-<div id="company_tags" class="btn btn-xs btn-warning">Show Company Tags</div>
-
-<span class="hidebutton">[Epic Systems](/company/epic-systems/)</span></div>
