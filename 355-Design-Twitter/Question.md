@@ -45,6 +45,12 @@ twitter.getNewsFeed(1);
 
 <div>
 
+<div id="company_tags" class="btn btn-xs btn-warning">Show Company Tags</div>
+
+<span class="hidebutton">[Amazon](/company/amazon/) [Twitter](/company/twitter/)</span></div>
+
+<div>
+
 <div id="tags" class="btn btn-xs btn-warning">Show Tags</div>
 
 <span class="hidebutton">[Hash Table](/tag/hash-table/) [Heap](/tag/heap/) [Design](/tag/design/)</span></div>
